@@ -22,6 +22,7 @@
 		$date_start = get_post_meta($post->ID, 'date_start', true);
 		$date_end = get_post_meta($post->ID, 'date_end', true);
 		$location = get_post_meta($post->ID, 'location', true);
+		$latlong = get_post_meta($post->ID, 'latlong', true);
 		wp_nonce_field(__FILE__, 'info_event_nonce');
 		echo "<label for='date_start'>Fecha de inauguración:</label>";
 		echo "<input type='date' class='widefat' id='date_start' name='date_start' value='$date_start'/>";
@@ -29,6 +30,8 @@
 		echo "<input type='date' class='widefat' id='date_end' name='date_end' value='$date_end'/>";
 		echo "<label for='location'>Lugar:</label>";
 		echo "<input type='text' class='widefat' id='location' name='location' value='$location'/>";
+		echo "<label for='latlong'>Latlong:</label>";
+		echo "<input type='text' class='widefat' id='latlong' name='latlong' value='$latlong'/>";
 	}
 
 
@@ -60,6 +63,9 @@
 		}
 		if ( isset($_POST['location']) and check_admin_referer(__FILE__, 'info_event_nonce') ){
 			update_post_meta($post_id, 'location', $_POST['location']);
+		}
+		if ( isset($_POST['latlong']) and check_admin_referer(__FILE__, 'info_event_nonce') ){
+			update_post_meta($post_id, 'latlong', $_POST['latlong']);
 		}
 
 

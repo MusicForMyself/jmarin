@@ -1777,7 +1777,7 @@ function museo_get_attachment_url($attachment_id, $size='thumbnail', $icon = fal
 }
 
 
-/*
+/**
  * Get artist bio info from page
  * @return Array
  */
@@ -1791,4 +1791,17 @@ function jf_get_semblanza(){
 					"artist_bio_photo" 	=> $thumb[0]
 				);
 
+}
+
+/**
+ * Get artist bio info from page
+ * @param Int $expo_id
+ * @return Array
+ */
+function get_expo($expo_id){
+	$post_object = get_post($expo_id);
+	$thumb = wp_get_attachment_image_src(get_post_thumbnail_id($post_object->ID), 'medium');
+	$post_object->thumb_url = $thumb[0];
+	$post_object->post_content = wpautop($post_object->post_content);
+	return json_encode($post_object);
 }

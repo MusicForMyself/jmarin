@@ -241,14 +241,20 @@ class Router{
 		 */      
 		
 			/*
-			 * Get user's timeline feed
-			 * @param String $user_login The user to retrieve timeline for
-			 * @param Int $offset Number of offsetted posts pages for pagination purposes
-			 * @important Timeline gets blocks of 10 activities, offset must be set according to the set of results. Ej. Page 1 is offset 0, page 2 is offset 1
-			 * 
+			 * Get coming expos
+			 * @param Int $offset Number of offsetted posts pages for pagination purposes 
 			 */
 			$slim->get('/rest/v1/expos/feed/:offset',function ($offset){
 				echo get_expos_feed($offset);
+				exit;
+			});
+
+			/*
+			 * Get expo detail
+			 * @param Int $expo_id
+			 */
+			$slim->get('/rest/v1/expos/detail/:expo_id/',function ($expo_id){
+				echo get_expo($expo_id);
 				exit;
 			});
 		

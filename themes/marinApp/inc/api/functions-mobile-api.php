@@ -172,54 +172,35 @@ function unfollow_category($user_login){
 add_action('wp_ajax_unfollow_category', 'unfollow_category');
 add_action('wp_ajax_nopriv_unfollow_category', 'unfollow_category');
 
-// EVENTS
-function get_events_feed($user, $filter = "all", $offset){
+/*
+ * ****** THIS IS A MARIN METHOD *******
+ * Get expos feed
+ * @param Int $offset
+ * @param Int $limit
+ * @return JSON Object 
+ */
+function get_expos_feed($offset = NULL, $limit = NULL){
 
 	$events_feed = array();
-	if($filter == "all"){
-		$filter_nice = "Cronológico";
-		$events = filter_posts_by( "all" );
+	if($offset){
+		$args = array(
+						"post_type" 		=> "exposicion",
+						"posts_per_page" 	=> $limit,
+						"offset" 			=> $offset,
+					);
+	}else{
+		$args = array(
+						"post_type" 		=> "exposicion",
+						"posts_per_page" 	=> -1,
+					);
 	}
-	if($filter == "most_popular"){
-		$filter_nice = "Más populares";
-		$events = filter_posts_by("popular");
+	$expos = get_posts($args);
+	$expos_complete = array("pool" => $expos, "count" => count($expos));
+	foreach ($expos_complete['pool'] as $each_expo) {
+		$thumb =  wp_get_attachment_image_src(get_post_thumbnail_id($each_expo->ID), 'thumbnail');
+		$each_expo->thumb_url = $thumb[0];
 	}
-	if($filter == "boosted"){
-		$filter_nice = "Recomendados";
-		$events = filter_posts_by("boosted");
-	}
-	if($filter == "ending"){
-		$filter_nice = "Por terminar";
-		$events = filter_posts_by("ending");
-	}
-		
-	foreach ($events as $event) {
-		$ID_venue 		= get_post_meta($event->ID ,'mg_venue_id',true);
-		$thumb_url 		= museo_get_attachment_url( get_post_thumbnail_id($event->ID), 'eventos-feed' );
-		$type 			= wp_get_post_terms( $event->ID, 'tipo-de-evento' );
-		$latlong 		= (get_post_meta($event->ID,'mg_evento_latlong', true) != '') ? get_post_meta($event->ID,'mg_evento_latlong', true) : NULL;
-		$address 		= (get_post_meta($event->ID,'mg_evento_direccion', true) != '') ? get_post_meta($event->ID,'mg_evento_direccion', true) : NULL;
-		$trimmed_description = ($event->post_content !== '') ? wp_trim_words( $event->post_content, $num_words = 15, $more = '...' ) : NULL;
-		$events_feed['results'][] = array(
-								'ID' 				=> $event->ID,
-								'event_title' 		=> $event->post_title,
-								'event_description' => $trimmed_description,
-								'event_thumbnail' 	=> $thumb_url[0],
-								'event_type'	 	=> (!empty($type)) ? $type[0]->name : null,
-								'venue_id' 			=> $ID_venue,
-								'venue' 			=> get_the_author_meta( 'display_name', $ID_venue ),
-								'venue_avatar' 		=> museo_get_profilepic_url($ID_venue),
-								'date_start' 		=> (fecha_inicio_evento($event->ID) !== '') ? fecha_inicio_evento($event->ID) : NULL,
-								'date_end' 			=> (fecha_fin_evento($event->ID) !== '') ? fecha_fin_evento($event->ID) : NULL,
-								'latlong' 			=> $latlong,
-								'address' 			=> $address,
-								'scheduled' 		=> ( in_array( $event->ID, museografo_eventos_agendados($user) ) ) ? true : false,
-								'attended' 			=> ( in_array( $event->ID, get_attended_events($user) ) ) ? true : false
-							);
-		
-	}
-	$events_feed['filter_nice'] = $filter_nice;
-	return json_encode($events_feed);
+	return json_encode($expos_complete);
 }
 /*
  * Get single event info
@@ -1729,7 +1710,7 @@ function save_profile_picture_upload($user_login, $image_temp, $image_name) {
  *
  * @return json encoded success plus data pool if exists
  */
-function museo_get_asset_by_name($asset_name = NULL, $args = array()){
+function jf_get_asset_by_name($asset_name = NULL, $args = array()){
 	$args = json_decode(stripslashes($args), JSON_FORCE_OBJECT);
 	
 	if(!$asset_name) 
@@ -1793,4 +1774,21 @@ function museo_get_attachment_url($attachment_id, $size='thumbnail', $icon = fal
     if ( $src && $width && $height )
         return array( $src, $width, $height );
     return false;
+}
+
+
+/*
+ * Get artist bio info from page
+ * @return Array
+ */
+function jf_get_semblanza(){
+	$semblanza_page = get_page_by_path('semblanza');
+	$thumb =  wp_get_attachment_image_src(get_post_thumbnail_id($semblanza_page->ID), 'medium');
+	return  array(
+					"artist_name" 	=> $semblanza_page->post_title,
+					"artist_origin" => "Uruapan, Michoacán 1963",
+					"artist_bio" 	=> wpautop($semblanza_page->post_content),
+					"artist_bio_photo" 	=> $thumb[0]
+				);
+
 }

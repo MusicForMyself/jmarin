@@ -107,8 +107,8 @@
 		
 		// cambiar el tamaño del thumbnail
 		
-		update_option( 'thumbnail_size_w', 150 );
-		update_option( 'thumbnail_size_h', 150 );
+		update_option( 'thumbnail_size_w', 200 );
+		update_option( 'thumbnail_size_h', 200 );
 		update_option( 'thumbnail_crop', true );
 		
 		update_option( 'medium_size_w', 680 );

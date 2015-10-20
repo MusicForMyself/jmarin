@@ -247,24 +247,10 @@ class Router{
 			 * @important Timeline gets blocks of 10 activities, offset must be set according to the set of results. Ej. Page 1 is offset 0, page 2 is offset 1
 			 * 
 			 */
-			$slim->get('/rest/v1/:u_login/timeline/:offset',function ($user_login, $offset){
-				echo get_user_timeline($user_login, $offset);
+			$slim->get('/rest/v1/expos/feed/:offset',function ($offset){
+				echo get_expos_feed($offset);
 				exit;
 			});
-			
-			/*
-			 * Get discover screen feed
-			 * @param String $user_login The logged in user (to be deprecated soon)
-			 * @param Int $offset Number of offsetted posts pages for pagination purposes
-			 * @important Timeline gets blocks of 10 activities, offset must be set according to the set of results. Ej. Page 1 is offset 0, page 2 is offset 1
-			 * 
-			 */
-			$slim->get('/rest/v1/:u_login/feeds/discover/',function ($user_login){
-				// echo get_discover_feed($user_login);
-				echo "Sowwy, this endpoint will be available until next version of the API";
-				exit;
-			});
-
 		
 		
 		/*                                    
@@ -369,15 +355,26 @@ class Router{
 			 */  
 
 			/*
-			 * Update user profile pic
-			 * @param String $logged
+			 * Get artist bio
+			 * @param String $asset_name
 			 * @param File $file via $_POST
 			 * @return JSON success
 			 * TO DO: Check token validity before actually uploading file
 			 * TO DO: Generate extra tokens to upload files, like a nonce
 			 */
-			$slim->get('/rest/v1/assets/:asset_name/:args/', function($asset_name, $args){
-				echo json_encode(museo_get_asset_by_name($asset_name, $args));
+			$slim->get('/rest/v1/commons/semblanza/', function(){
+				echo json_encode(jf_get_semblanza());
+				exit;
+			});
+
+			/*
+			 * Get asset by name
+			 * @param String $asset_name
+			 * @param Array $extra args
+			 * @return JSON
+			 */
+			$slim->get('/rest/v1/commons/:asset_name/:args/', function($asset_name, $args){
+				echo json_encode(jf_get_asset_by_name($asset_name, $args));
 				exit;
 			});
 

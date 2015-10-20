@@ -28,7 +28,7 @@
 		echo "<label for='date_end'>Fecha de clausura:</label>";
 		echo "<input type='date' class='widefat' id='date_end' name='date_end' value='$date_end'/>";
 		echo "<label for='location'>Lugar:</label>";
-		echo "<input type='date' class='widefat' id='location' name='location' value='$location'/>";
+		echo "<input type='text' class='widefat' id='location' name='location' value='$location'/>";
 	}
 
 

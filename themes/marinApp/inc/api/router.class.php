@@ -257,6 +257,15 @@ class Router{
 				echo get_expo($expo_id);
 				exit;
 			});
+
+			/*
+			 * Get hashtag content
+			 * @param Int $offset
+			 */
+			$slim->get('/rest/v1/content/hashtag/',function (){
+				echo get_marin_hashtag();
+				exit;
+			});
 		
 		
 		/*                                    

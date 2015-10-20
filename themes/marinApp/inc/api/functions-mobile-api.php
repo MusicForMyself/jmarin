@@ -1805,3 +1805,13 @@ function get_expo($expo_id){
 	$post_object->post_content = wpautop($post_object->post_content);
 	return json_encode($post_object);
 }
+
+/**
+ * Get content for hashtag page
+ * @param Int $offset
+ * @return Array
+ */
+function get_marin_hashtag($offset = NULL){
+	$hashtag_content = array();
+	return json_encode($hashtag_content);
+}

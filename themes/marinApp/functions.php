@@ -121,6 +121,10 @@
 
 // POST TYPES, METABOXES, TAXONOMIES AND CUSTOM PAGES ////////////////////////////////
 
+	/*** Router includes User class ***/
+	require_once('inc/api/router.class.php');
+
+
 	require_once('inc/api/functions-mobile-api.php');
 
 
@@ -134,7 +138,10 @@
 
 
 	require_once('inc/pages.php');
-	
+
+
+	/*** INIT API ROUTER ***/
+	$rest = new Router('My0$O/|/|T0k3nl0l');
 	
 	
 // MODIFICAR EL MAIN QUERY ///////////////////////////////////////////////////////////

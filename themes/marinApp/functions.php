@@ -87,7 +87,7 @@
 
 
 	add_filter( 'admin_footer_text', function() {
-		echo 'Creado por <a href="http://hacemoscodigo.com">Los Maquiladores</a>. ';
+		echo 'Creado por <a href="http://johnfalcon.me">John Falcon</a>. ';
 		echo 'Powered by <a href="http://www.wordpress.org">WordPress</a>';
 	});
 
@@ -106,11 +106,15 @@
 		// add_image_size( 'size_name', 200, 200, true );
 		
 		// cambiar el tamaño del thumbnail
-		/*
-		update_option( 'thumbnail_size_h', 100 );
-		update_option( 'thumbnail_size_w', 200 );
-		update_option( 'thumbnail_crop', false );
-		*/
+		
+		update_option( 'thumbnail_size_w', 150 );
+		update_option( 'thumbnail_size_h', 150 );
+		update_option( 'thumbnail_crop', true );
+		
+		update_option( 'medium_size_w', 680 );
+		update_option( 'medium_size_h', 680 );
+		update_option( 'medium_crop', false );
+		
 	}
 
 

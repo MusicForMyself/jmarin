@@ -121,6 +121,7 @@
 
 // POST TYPES, METABOXES, TAXONOMIES AND CUSTOM PAGES ////////////////////////////////
 
+	require_once('inc/api/functions-mobile-api.php');
 
 
 	require_once('inc/post-types.php');
@@ -133,6 +134,7 @@
 
 
 	require_once('inc/pages.php');
+	
 	
 	
 // MODIFICAR EL MAIN QUERY ///////////////////////////////////////////////////////////

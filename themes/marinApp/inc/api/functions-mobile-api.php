@@ -1803,6 +1803,15 @@ function get_expo($expo_id){
 	$thumb = wp_get_attachment_image_src(get_post_thumbnail_id($post_object->ID), 'medium');
 	$post_object->thumb_url = $thumb[0];
 	$post_object->post_content = wpautop($post_object->post_content);
+	$meta_datestart = get_post_meta($expo_id, "date_start", TRUE);
+	$post_object->event_date_start = ($meta_datestart !== '') ?  date("d.m.Y", strtotime($meta_datestart)): NULL;
+	$meta_dateend = get_post_meta($expo_id, "date_end", TRUE);
+	$post_object->event_date_end= ($meta_dateend !== '') ?  date("d.m.Y", strtotime($meta_dateend)): NULL;
+	$meta_location = get_post_meta($expo_id, "location", TRUE);
+	$post_object->event_location = ($meta_location !== '') ?  $meta_location: NULL;
+	$meta_latlong = get_post_meta($expo_id, "latlong", TRUE);
+	$post_object->event_latlong	 = ($meta_latlong !== '') ?  $meta_latlong: NULL;
+
 	return json_encode($post_object);
 }
 

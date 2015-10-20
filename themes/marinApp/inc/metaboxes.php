@@ -7,7 +7,7 @@
 
 	add_action('add_meta_boxes', function(){
 
-		// add_meta_box( id, title, name_meta_callback, post_type, context, priority );
+		add_meta_box( 'info_event_meta', "Información de la exposición", "info_event_callback", "exposicion", "side", "high" );
 
 	});
 
@@ -17,10 +17,15 @@
 
 
 
-	function name_meta_callback($post){
-		// $name = get_post_meta($post->ID, '_name_meta', true);
-		// wp_nonce_field(__FILE__, '_name_meta_nonce');
-		// echo "<input type='text' class='widefat' id='name' name='_name_meta' value='$name'/>";
+	function info_event_callback($post){
+
+		$date_start = get_post_meta($post->ID, 'date_start', true);
+		$date_end = get_post_meta($post->ID, 'date_end', true);
+		wp_nonce_field(__FILE__, 'info_event_nonce');
+		echo "<label for='date_start'>Fecha de inauguración:</label>";
+		echo "<input type='date' class='widefat' id='date_start' name='date_start' value='$date_start'/>";
+		echo "<label for='date_end'>Fecha de clausura:</label>";
+		echo "<input type='date' class='widefat' id='date_end' name='date_end' value='$date_end'/>";
 	}
 
 
@@ -44,8 +49,11 @@
 			return $post_id;
 
 
-		if ( isset($_POST['_name_meta']) and check_admin_referer(__FILE__, '_name_meta_nonce') ){
-			update_post_meta($post_id, '_name_meta', $_POST['_name_meta']);
+		if ( isset($_POST['date_start']) and check_admin_referer(__FILE__, 'info_event_nonce') ){
+			update_post_meta($post_id, 'date_start', $_POST['date_start']);
+		}
+		if ( isset($_POST['date_end']) and check_admin_referer(__FILE__, 'info_event_nonce') ){
+			update_post_meta($post_id, 'date_end', $_POST['date_end']);
 		}
 
 

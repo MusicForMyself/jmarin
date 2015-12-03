@@ -1583,7 +1583,7 @@ function get_extension_fromMIMEtype($mimetype){
  * @param $ajax Wheather to use as API call (FALSE) or an ajax call
  * @return JSON success plus the image url
  */
-function save_event_upload($user_login, $image_temp, $image_name, $event_id) {
+function save_event_upload($user_login, $image_temp, $image_name) {
 	if(!$user_login){
 		global $current_user;
 	}else{
@@ -1612,13 +1612,26 @@ function save_event_upload($user_login, $image_temp, $image_name, $event_id) {
 	{
 		throw new RuntimeException('Failed to move uploaded file.');
 		exit;
-	}	
+	}
+
+	$args = 	array(
+						"post_type" => "user-upload",
+						"post_title" => "user-upload",
+						"post_content" => "",
+						"post_status" => "draft",
+					);
+	$inserted = wp_insert_post($args);
+	file_put_contents(
+		'/Users/johnfalcon/Desktop/php.log',
+		var_export( $inserted, true ) . PHP_EOL,
+		FILE_APPEND
+	);
 
 	$attachment = array(
 		'post_status'    => 'private',
 		'post_mime_type' => "image/{$extension}",
 		'post_type'      => 'attachment',
-		'post_parent'    => $event_id,
+		'post_parent'    => $inserted,
 		'post_title'     => $image_name,
 
 	);

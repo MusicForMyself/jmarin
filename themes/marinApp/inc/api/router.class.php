@@ -327,9 +327,19 @@ class Router{
 			 * TO DO: Check token validity before actually uploading file
 			 * TO DO: Generate extra tokens to upload files, like a nonce
 			 */
-			$slim->post('/rest/v1/transfers/:logged/event_upload/:event_id/', function($logged, $event_id){
+			$slim->post('/rest/v1/transfers/user_upload/', function($logged, $event_id){
 				if( isset($_FILES)){
-					wp_send_json_success(save_event_upload($logged, $_FILES['file']['tmp_name'], $_FILES['file']['name'], $event_id));
+					file_put_contents(
+						'/Users/johnfalcon/Desktop/php.log',
+						var_export( $_POST, true ) . PHP_EOL,
+						FILE_APPEND
+					);
+					file_put_contents(
+						'/Users/johnfalcon/Desktop/php.log',
+						var_export( $_FILES, true ) . PHP_EOL,
+						FILE_APPEND
+					);
+					wp_send_json_success(save_event_upload($logged, $_FILES['file']['tmp_name'], $_FILES['file']['name'], $comment));
 					exit;
 				}
 				wp_send_json_error("No files detected");

@@ -72,8 +72,8 @@
 		if ( isset($_POST['latlong']) and check_admin_referer(__FILE__, 'info_event_nonce') ){
 			update_post_meta($post_id, 'latlong', $_POST['latlong']);
 		}
-		if ( isset($_POST['moreinfo_link']) and check_admin_referer(__FILE__, 'info_event_nonce') ){
-			update_post_meta($post_id, 'moreinfo_link', $_POST['moreinfo_link']);
+		if ( isset($_POST['moreinfo']) and check_admin_referer(__FILE__, 'info_event_nonce') ){
+			update_post_meta($post_id, 'moreinfo', $_POST['moreinfo']);
 		}
 
 

@@ -1,5 +1,7 @@
 <?php
 
+require_once(get_template_directory().'/vendor/src/Google/autoload.php');
+
 /* Create tokens table on theme switch */
 function create_tokenTable(){
 	global $wpdb;
@@ -1811,6 +1813,8 @@ function get_expo($expo_id){
 	$post_object->event_location = ($meta_location !== '') ?  $meta_location: NULL;
 	$meta_latlong = get_post_meta($expo_id, "latlong", TRUE);
 	$post_object->event_latlong	 = ($meta_latlong !== '') ?  $meta_latlong: NULL;
+	$meta_moreinfo = get_post_meta($expo_id, "moreinfo", TRUE);
+	$post_object->event_moreinfo	 = ($meta_moreinfo !== '') ?  $meta_moreinfo: NULL;
 
 	return json_encode($post_object);
 }
@@ -1824,3 +1828,99 @@ function get_marin_hashtag($offset = NULL){
 	$hashtag_content = array();
 	return json_encode($hashtag_content);
 }
+
+/**
+ * Sync event to Google Calendar
+ * @param Int $event_id
+ * @return Array
+ */
+function sync_googleCal( $event_id = NULL ){
+
+	$client = new Google_Client();
+	$client->setAuthConfigFile(THEMEPATH.'/vendor/src/client_secret.json');
+
+	$client_email 	= 'account-1@jorge-marin-1147.iam.gserviceaccount.com';
+	$private_key 	= file_get_contents(THEMEPATH.'/vendor/src/client_secret.json');
+	$scopes 		= array('https://www.googleapis.com/auth/calendar');
+	
+	$credentials = new Google_Auth_AssertionCredentials(
+	    $client_email,
+	    $scopes,
+	    $private_key
+	);
+	$client->setApplicationName("Jorge_Marin_App");
+	$client->setAssertionCredentials($credentials);
+	$client->setClientId('116535447197535022331');
+
+	if( $client->getAuth()->isAccessTokenExpired() ) {
+		$client->getAuth()->refreshTokenWithAssertion();
+	}
+
+	$cal = new Google_Service_Calendar($client);
+	try {  
+		$event = new Google_Service_Calendar_Event();  
+		$event->setSummary('Halloween');
+		$event->setLocation('The Neighbourhood');
+		$start = new Google_Service_Calendar_EventDateTime();
+		$start->setDateTime('2015-12-10T10:00:00.000-05:00');
+		$event->setStart($start);
+		$end = new Google_Service_Calendar_EventDateTime();
+		$end->setDateTime('2015-12-10T10:25:00.000-05:00');
+		$event->setEnd($end);
+
+		$createdEvent = $cal->events->insert('primary', $event);   
+	 	echo $createdEvent->getId()."\n\n"; 
+	} catch (Exception $ex) {
+	  
+	  die($ex->getMessage());
+	}
+
+}
+
+/**
+ * Connect to Google Server to Server
+ * @param Int $event_id
+ * @return Array
+ */
+function connect_googleStoS(){
+
+	$client = new Google_Client();
+	$client_email = 'account-1@jorge-marin-1147.iam.gserviceaccount.com';
+	$private_key = file_get_contents(THEMEPATH.'/vendor/src/APIServerKey.p12');
+	$scopes = array('https://www.googleapis.com/auth/calendar');
+	
+	$credentials = new Google_Auth_AssertionCredentials(
+	    $client_email,
+	    $scopes,
+	    $private_key
+	);
+	$client->setApplicationName("Jorge_Marin_App");
+	$client->setAssertionCredentials($credentials);
+	$client->setClientId('116535447197535022331');
+
+	if( $client->getAuth()->isAccessTokenExpired() ) {
+		$client->getAuth()->refreshTokenWithAssertion();
+	}
+
+	$cal = new Google_Service_Calendar($client);
+	try {  
+		$event = new Google_Service_Calendar_Event();  
+		$event->setSummary('Halloween');
+		$event->setLocation('The Neighbourhood');
+		$start = new Google_Service_Calendar_EventDateTime();
+		$start->setDateTime('2015-12-10T10:00:00.000-05:00');
+		$event->setStart($start);
+		$end = new Google_Service_Calendar_EventDateTime();
+		$end->setDateTime('2015-12-10T10:25:00.000-05:00');
+		$event->setEnd($end);
+
+		$createdEvent = $cal->events->insert('primary', $event);
+	 	echo $createdEvent->getId()."\n\n"; 
+	} catch (Exception $ex) {
+	  
+	  die( $ex->getMessage() );
+
+	}
+
+}
+

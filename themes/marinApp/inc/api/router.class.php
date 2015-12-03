@@ -266,6 +266,17 @@ class Router{
 				echo get_marin_hashtag();
 				exit;
 			});
+
+			/*
+			 * Schedule new event
+			 * @param Int $event_id
+			 */
+			$slim->post('/rest/v1/events/schedule/',function (){
+				extract($_POST);
+				/*** Sync with Google Calendar ***/
+				sync_googleCal($event_id);
+				exit;
+			});
 		
 		
 		/*                                    

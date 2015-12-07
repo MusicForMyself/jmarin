@@ -1639,7 +1639,7 @@ function save_event_upload($image_temp, $image_name, $comment) {
 		// registra_actividad($event_id, $current_user->ID, 'media', $attach_id);
 		$img_url2 = museo_get_attachment_url($attach_id, 'agenda-feed');
 
-	}k
+	}
 	return $img_url2[0];
 	exit;
 }
@@ -1819,7 +1819,34 @@ function get_expo($expo_id){
 	$meta_moreinfo = get_post_meta($expo_id, "moreinfo", TRUE);
 	$post_object->event_moreinfo	 = ($meta_moreinfo !== '') ?  $meta_moreinfo: NULL;
 
-	return json_encode($post_object);
+	/*** Get gallery contents ***/
+	$args = array(
+					'post_type'   => 'attachment',
+					'numberposts' => -1,
+					'post_status' => 'any',
+					'post_parent' => $expo_id,
+					'exclude'     => get_post_thumbnail_id(),
+				);
+
+	$attachments = get_posts( $args );
+	$pool  = array();
+	if ( $attachments ) {
+		foreach ( $attachments as $index => $attachment ) {
+			$thumbnail = wp_get_attachment_image_src( $attachment->ID, 'medium_cut' );
+			$pool[] = array(	
+										"title" 		=>  apply_filters( 'the_title', $attachment->post_title ),
+										"description" 	=>  apply_filters( 'the_title', $attachment->post_excerpt ),
+										"url" 			=>  $thumbnail[0],
+									);
+		}
+		$gallery = array();
+		foreach ($pool as $index => $each_pool_element) {
+			
+			$gallery['pool'][] = $each_pool_element;
+		}
+		$post_object->gallery  = $gallery;
+	}
+	return json_encode($post_object, true);
 }
 
 /**
@@ -1828,8 +1855,20 @@ function get_expo($expo_id){
  * @return Array
  */
 function get_marin_hashtag($offset = NULL){
-	$hashtag_content = array();
-	return json_encode($hashtag_content);
+	$hashtag_final = array();
+	$args = array(
+					"post_type" 	 => "user-upload",
+					"posts_per_page" => -1,
+					"orderby" 		 => "date",
+					"order" 		 => "DESC",
+				 );
+	$hashtag_content = get_posts( $args );
+	foreach ($hashtag_content as $key => $each_image) {
+		$hashtag_url = wp_get_attachment_image_src( get_post_thumbnail_id($each_image->ID), 'medium_cut' );
+		$hashtag_final[$key]['comment'] = $each_image->post_title;
+		$hashtag_final[$key]['img_url'] = $hashtag_url[0];
+	}
+	return json_encode($hashtag_final);
 }
 
 /**

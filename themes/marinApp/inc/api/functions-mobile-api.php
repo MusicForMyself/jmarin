@@ -1583,12 +1583,7 @@ function get_extension_fromMIMEtype($mimetype){
  * @param $ajax Wheather to use as API call (FALSE) or an ajax call
  * @return JSON success plus the image url
  */
-function save_event_upload($user_login, $image_temp, $image_name) {
-	if(!$user_login){
-		global $current_user;
-	}else{
-		$current_user = get_user_by('slug', $user_login);
-	}
+function save_event_upload($image_temp, $image_name, $comment) {
 	global $wpdb;
 
 	$finfo = new finfo(FILEINFO_MIME_TYPE);
@@ -1616,16 +1611,11 @@ function save_event_upload($user_login, $image_temp, $image_name) {
 
 	$args = 	array(
 						"post_type" => "user-upload",
-						"post_title" => "user-upload",
+						"post_title" => $comment,
 						"post_content" => "",
-						"post_status" => "draft",
+						"post_status" => "publish",
 					);
 	$inserted = wp_insert_post($args);
-	file_put_contents(
-		'/Users/johnfalcon/Desktop/php.log',
-		var_export( $inserted, true ) . PHP_EOL,
-		FILE_APPEND
-	);
 
 	$attachment = array(
 		'post_status'    => 'private',
@@ -1645,11 +1635,11 @@ function save_event_upload($user_login, $image_temp, $image_name) {
 		$attach_data = wp_generate_attachment_metadata( $attach_id, $img );
 		$_POST['attach_id'] = $attach_id;
 		wp_update_attachment_metadata( $attach_id, $attach_data );
-		set_post_thumbnail( '', $attach_id );
-		registra_actividad($event_id, $current_user->ID, 'media', $attach_id);
+		set_post_thumbnail( $inserted, $attach_id );
+		// registra_actividad($event_id, $current_user->ID, 'media', $attach_id);
 		$img_url2 = museo_get_attachment_url($attach_id, 'agenda-feed');
 
-	}
+	}k
 	return $img_url2[0];
 	exit;
 }
@@ -1667,7 +1657,7 @@ function save_profile_picture_upload($user_login, $image_temp, $image_name) {
 		$current_user = get_user_by('slug', $user_login);
 	}
 	global $wpdb;
-
+	
 	$finfo = new finfo(FILEINFO_MIME_TYPE);
 	    if (false === $ext = array_search(
 	        $finfo->file($image_temp),

@@ -1639,7 +1639,7 @@ function save_event_upload($image_temp, $image_name, $comment) {
 		// registra_actividad($event_id, $current_user->ID, 'media', $attach_id);
 		$img_url2 = museo_get_attachment_url($attach_id, 'agenda-feed');
 
-	}k
+	}
 	return $img_url2[0];
 	exit;
 }
@@ -1786,13 +1786,13 @@ function museo_get_attachment_url($attachment_id, $size='thumbnail', $icon = fal
  * Get artist bio info from page
  * @return Array
  */
-function jf_get_semblanza(){
+function jf_get_semblanza($lang){
 	$semblanza_page = get_page_by_path('semblanza');
 	$thumb =  wp_get_attachment_image_src(get_post_thumbnail_id($semblanza_page->ID), 'medium');
 	return  array(
 					"artist_name" 	=> $semblanza_page->post_title,
 					"artist_origin" => "Uruapan, Michoacán 1963",
-					"artist_bio" 	=> wpautop($semblanza_page->post_content),
+					"artist_bio" 	=> wpautop(qtranxf_use($lang, $semblanza_page->post_content)),
 					"artist_bio_photo" 	=> $thumb[0]
 				);
 

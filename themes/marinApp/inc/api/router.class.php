@@ -391,7 +391,9 @@ class Router{
 			 * TO DO: Generate extra tokens to upload files, like a nonce
 			 */
 			$slim->get('/rest/v1/commons/semblanza/', function(){
-				echo json_encode(jf_get_semblanza());
+				$app = \Slim\Slim::getInstance();
+				$lang = $app->request->params('devicelang');
+				echo json_encode(jf_get_semblanza($lang));
 				exit;
 			});
 

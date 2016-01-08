@@ -337,6 +337,19 @@ class Router{
 				wp_send_json_error("No files detected");
 				exit;
 			});
+
+			/*
+			 * Upload event image
+			 * @param String $logged
+			 * @param File $file via $_POST
+			 * @return JSON success
+			 * TO DO: Check token validity before actually uploading file
+			 * TO DO: Generate extra tokens to upload files, like a nonce
+			 */
+			$slim->get('/rest/v1/user_uploads/', function(){
+				wp_send_json_error(get_marin_hashtag());
+				exit;
+			});
 	
 			/*
 			 * Update user profile pic

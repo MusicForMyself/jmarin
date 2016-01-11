@@ -35,8 +35,6 @@
 		echo "<input type='text' class='widefat' id='location' name='location' value='$location'/>";
 		echo "<label for='latlong'>Latlong:</label>";
 		echo "<input type='text' class='widefat' id='latlong' name='latlong' value='$latlong'/>";
-		echo "<label for='moreinfo'>Más información (url):</label>";
-		echo "<input type='text' class='widefat' id='moreinfo' name='moreinfo' value='$moreinfo'/>";
 	}
 
 
@@ -72,10 +70,6 @@
 		if ( isset($_POST['latlong']) and check_admin_referer(__FILE__, 'info_event_nonce') ){
 			update_post_meta($post_id, 'latlong', $_POST['latlong']);
 		}
-		if ( isset($_POST['moreinfo']) and check_admin_referer(__FILE__, 'info_event_nonce') ){
-			update_post_meta($post_id, 'moreinfo', $_POST['moreinfo']);
-		}
-
 
 		// Guardar correctamente los checkboxes
 		/*if ( isset($_POST['_checkbox_meta']) and check_admin_referer(__FILE__, '_checkbox_nonce') ){

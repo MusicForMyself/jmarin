@@ -449,7 +449,7 @@ function get_expo($expo_id, $lang = "es"){
 	$post_object->event_location = ($meta_location !== '') ?  $meta_location: NULL;
 	$meta_latlong = get_post_meta($expo_id, "latlong", TRUE);
 	$post_object->event_latlong	 = ($meta_latlong !== '') ?  $meta_latlong: NULL;
-	$meta_moreinfo = get_post_meta($expo_id, "moreinfo", TRUE);
+	$meta_moreinfo = "http://jorgemarin.com.mx";
 	$post_object->event_moreinfo	 = ($meta_moreinfo !== '') ?  $meta_moreinfo: NULL;
 
 	/*** Get gallery contents ***/

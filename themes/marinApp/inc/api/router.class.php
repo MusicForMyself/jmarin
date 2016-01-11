@@ -245,7 +245,8 @@ class Router{
 			 * @param Int $offset Number of offsetted posts pages for pagination purposes 
 			 */
 			$slim->get('/rest/v1/expos/feed/:offset',function ($offset){
-				echo get_expos_feed($offset);
+				$devicelang = (!empty($_GET) AND isset($_GET['devicelang'])) ? $_GET['devicelang'] : "es";
+				echo get_expos_feed($offset, NULL, $devicelang);
 				exit;
 			});
 
@@ -254,7 +255,8 @@ class Router{
 			 * @param Int $expo_id
 			 */
 			$slim->get('/rest/v1/expos/detail/:expo_id/',function ($expo_id){
-				echo get_expo($expo_id);
+				$devicelang = (!empty($_GET) AND isset($_GET['devicelang'])) ? $_GET['devicelang'] : "es";
+				echo get_expo($expo_id, $devicelang);
 				exit;
 			});
 

@@ -166,36 +166,7 @@ function unfollow_category($user_login){
 add_action('wp_ajax_unfollow_category', 'unfollow_category');
 add_action('wp_ajax_nopriv_unfollow_category', 'unfollow_category');
 
-/*
- * ****** THIS IS A MARIN METHOD *******
- * Get expos feed
- * @param Int $offset
- * @param Int $limit
- * @return JSON Object 
- */
-function get_expos_feed($offset = NULL, $limit = NULL, $lang = "es"){
 
-	$events_feed = array();
-	if($offset){
-		$args = array(
-						"post_type" 		=> "exposicion",
-						"posts_per_page" 	=> $limit,
-						"offset" 			=> $offset,
-					);
-	}else{
-		$args = array(
-						"post_type" 		=> "exposicion",
-						"posts_per_page" 	=> -1,
-					);
-	}
-	$expos = get_posts($args);
-	$expos_complete = array("pool" => $expos, "count" => count($expos));
-	foreach ($expos_complete['pool'] as $each_expo) {
-		$thumb =  wp_get_attachment_image_src(get_post_thumbnail_id($each_expo->ID), 'thumbnail');
-		$each_expo->thumb_url = $thumb[0];
-	}
-	return json_encode($expos_complete);
-}
 /*
  * Get single event info
  * @param Int $event_id
@@ -425,6 +396,38 @@ function jf_get_semblanza($lang = 'es'){
 					"artist_bio_photo" 	=> $thumb[0]
 				);
 
+}
+
+/*
+ * ****** THIS IS A MARIN METHOD *******
+ * Get expos feed
+ * @param Int $offset
+ * @param Int $limit
+ * @return JSON Object 
+ */
+function get_expos_feed($offset = NULL, $limit = NULL, $lang = "es"){
+
+	$events_feed = array();
+	if($offset){
+		$args = array(
+						"post_type" 		=> "exposicion",
+						"posts_per_page" 	=> $limit,
+						"offset" 			=> $offset,
+					);
+	}else{
+		$args = array(
+						"post_type" 		=> "exposicion",
+						"posts_per_page" 	=> -1,
+					);
+	}
+	$expos = get_posts($args);
+	$expos_complete = array("pool" => $expos, "count" => count($expos));
+	foreach ($expos_complete['pool'] as &$each_expo) {
+		$thumb =  wp_get_attachment_image_src(get_post_thumbnail_id($each_expo->ID), 'thumbnail');
+		$each_expo->thumb_url  = $thumb[0];
+		$each_expo->post_title = qtranxf_use($lang, $each_expo->post_title_ml);
+	}
+	return json_encode($expos_complete);
 }
 
 /**

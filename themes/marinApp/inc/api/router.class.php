@@ -182,8 +182,8 @@ class Router{
 		 *            |___/         
 		 */
 		
-			/*** Get random event image for login page ***/
-			$slim->get('/rest/v1/content/login/', function() {
+			/*** Get random event image for home page ***/
+			$slim->get('/rest/v1/content/home/', function() {
 				return get_login_content();
 				exit;
 			});
